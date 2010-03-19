@@ -1,0 +1,3 @@
+Directory for my dotfiles.  Typically install in homedir and make hard links from these files to ~/{file-name}.  Someday I'll add a script to do that.
+
+eric.bloch@gmail.com
