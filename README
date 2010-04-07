@@ -1,3 +1,8 @@
-Directory for my dotfiles.  Typically install in homedir and make hard links from these files to ~/{file-name}.  Someday I'll add a script to do that.
+Directory for my dotfiles.  
+
+Typically install in homedir and make hard links from these files 
+to ~/{file-name}.  
+
+Install as ~/dotfiles and then run ~/dotfiles/linkit.sh
 
 eric.bloch@gmail.com
