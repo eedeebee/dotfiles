@@ -88,7 +88,7 @@ set autologout=0
 #cd .
 #cwdcmd
 
-source ~/.jh-tcshrc
+if (-e ~/.jh-tcshrc) source ~/.jh-tcshrc
 
 alias cdx 'cd /usr/local/markmail/xquery'
 alias cda 'cd /usr/local/markmail/xquery/admin'
