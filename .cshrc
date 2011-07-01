@@ -113,6 +113,8 @@ add2path /usr/local/markmail/bin
 
 alias svd 'svn diff --diff-cmd ~/bin/vd'
 
+alias 'bgit' '/usr/bin/sudo -u git -H tcsh'
+
 
 ##
 # Your previous /Users/ebloch/.cshrc file was backed up as /Users/ebloch/.cshrc.macports-saved_2010-03-05_at_22:32:39
