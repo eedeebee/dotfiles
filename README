@@ -3,6 +3,6 @@ Directory for my dotfiles.
 Typically install in homedir and make hard links from these files 
 to ~/{file-name}.  
 
-Install as ~/dotfiles and then run ~/dotfiles/linkit.sh
+Install as ~/dotfiles and then run ~/dotfiles/linkit.sh (and ignore errors)
 
 eric.bloch@gmail.com
