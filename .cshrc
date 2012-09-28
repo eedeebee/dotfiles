@@ -88,7 +88,7 @@ set autologout=0
 #cd .
 #cwdcmd
 
-source ~/.jh-tcshrc
+if (-e ~/.jh-tcshrc) source ~/.jh-tcshrc
 
 alias cdx 'cd /usr/local/markmail/xquery'
 alias cda 'cd /usr/local/markmail/xquery/admin'
@@ -110,15 +110,20 @@ add2path /opt/CollabNet_Subversion/bin/
 add2path /sbin
 add2path /usr/sbin
 add2path /usr/local/markmail/bin
+add2path /opt/local/bin
+add2path /opt/local/sbin
 
 alias svd 'svn diff --diff-cmd ~/bin/vd'
 
+alias 'bgit' '/usr/bin/sudo -u git -H tcsh'
+
+alias 'ml' 'ssh ebloch@ssh.marklogic.com'
 
 ##
 # Your previous /Users/ebloch/.cshrc file was backed up as /Users/ebloch/.cshrc.macports-saved_2010-03-05_at_22:32:39
 ##
 
 # MacPorts Installer addition on 2010-03-05_at_22:32:39: adding an appropriate PATH variable for use with MacPorts.
-setenv PATH /opt/local/bin:/opt/local/sbin:$PATH
 # Finished adapting your PATH environment variable for use with MacPorts.
 
+if (-e ~/dotfiles/.cshrc."$SHORT_HOST") source ~/dotfiles/.cshrc."$SHORT_HOST"
