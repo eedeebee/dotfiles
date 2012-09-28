@@ -129,6 +129,8 @@ alias 'ml' 'ssh ebloch@ssh.marklogic.com'
 add2path /Users/ebloch/cqsh
 add2path /usr/local/mysql/bin
 add2path /usr/local/apache-maven-3.0.4/bin
+add2path /Users/ebloch/cqsh
+add2path /usr/local/mysql/bin
 add2path /usr/local/git/bin
 add2path /Applications/depx-0.1
 
@@ -139,20 +141,5 @@ alias gs 'git status'
 
 alias 's2xec2' 'ssh root@ec2-184-73-4-47.compute-1.amazonaws.com'
 
-##
-# Your previous /Users/ebloch/.cshrc file was backed up as /Users/ebloch/.cshrc.macports-saved_2010-03-05_at_22:32:39
-##
-
-# MacPorts Installer addition on 2010-03-05_at_22:32:39: adding an appropriate PATH variable for use with MacPorts.
-# Finished adapting your PATH environment variable for use with MacPorts.
-
 if (-e ~/dotfiles/.cshrc."$SHORT_HOST") source ~/dotfiles/.cshrc."$SHORT_HOST"
-
-##
-# Your previous /Users/ebloch/.cshrc file was backed up as /Users/ebloch/.cshrc.macports-saved_2012-09-28_at_10:27:08
-##
-
-# MacPorts Installer addition on 2012-09-28_at_10:27:08: adding an appropriate PATH variable for use with MacPorts.
-#setenv PATH /opt/local/bin:/opt/local/sbin:$PATH
-# Finished adapting your PATH environment variable for use with MacPorts.
 
