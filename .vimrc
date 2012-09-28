@@ -7,7 +7,11 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 set noincsearch 
-autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif 
+set encoding=utf8
+set backupdir=$HOME/.vim-backup-dir
+set directory=$HOME/.vim-backup-dir
+" autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif 
+autocmd BufEnter *  lcd %:p:h 
 syn on
 
 function! DoPrettyXML()
