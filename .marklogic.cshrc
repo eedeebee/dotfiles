@@ -46,3 +46,9 @@ alias um 'umount ~/sshfs/*'
 #um >& /dev/null
 
 alias sshm '~/Downloads/sshfs-binaries/sshfs-static-leopard ml01.dev.markmail.int:/ ~/sshfs/ml01.dev.markmail.int -o reconnect'
+
+alias dev 'ssh developer.marklogic.com'
+alias stage 'ssh dmc-stage.marklogic.com'
+alias dmcs 'ssh dmc-stage.marklogic.com'
+alias 3s 'ssh stanford-3s.demo.marklogic.com'
+alias try 'ssh try.marklogic.com'
