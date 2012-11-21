@@ -110,6 +110,7 @@ add2path /opt/CollabNet_Subversion/bin/
 add2path /sbin
 add2path /usr/sbin
 add2path /usr/local/markmail/bin
+add2path ~/bin
 
 alias svd 'svn diff --diff-cmd ~/bin/vd'
 
