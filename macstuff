@@ -1,1 +1,5 @@
 defaults write com.apple.desktopservices DSDontWriteNetworkStores true
+defaults write com.apple.Finder AppleShowAllFiles YES
+sudo defaults write /System/Library/LaunchDaemons/org.apache.httpd Disabled -bool false
+mkdir -p ~/Pictures/Screenshots
+defaults write com.apple.screencapture location ~/Pictures/Screenshots
