@@ -3,3 +3,4 @@ defaults write com.apple.Finder AppleShowAllFiles YES
 sudo defaults write /System/Library/LaunchDaemons/org.apache.httpd Disabled -bool false
 mkdir -p ~/Pictures/Screenshots
 defaults write com.apple.screencapture location ~/Pictures/Screenshots
+sudo -s launchctl load -w /System/Library/LaunchDaemons/ftp.plist

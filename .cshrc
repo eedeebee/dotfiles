@@ -111,6 +111,7 @@ add2path /sbin
 add2path /usr/sbin
 add2path /usr/local/markmail/bin
 add2path ~/bin
+add2path /usr/local/mysql/bin
 
 alias svd 'svn diff --diff-cmd ~/bin/vd'
 
