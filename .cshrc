@@ -31,7 +31,7 @@ if ( (! $?ENVONLY) && $?prompt ) then
         endsw
         
 
-        if ( -o /bin/su ) then
+        if ( -o /bin/su || -o /usr/bin/su ) then
                 if ($shell == /bin/csh) then
                     set prompt="(${HOST}) ==# "
                 else
