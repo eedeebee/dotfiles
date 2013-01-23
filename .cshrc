@@ -29,6 +29,17 @@ if ( (! $?ENVONLY) && $?prompt ) then
             case 'dev':
                 set col = $black
         endsw
+        switch ($HOST:s/.marklogic.com//)
+            case 'stage-developer':
+            case 'dmc-stage':
+                set col = $magenta
+                breaksw;
+            case 'developer':
+            case 'www':
+                set col = $red
+                breaksw;
+        endsw
+
         
 
         if ( -o /bin/su || -o /usr/bin/su ) then
