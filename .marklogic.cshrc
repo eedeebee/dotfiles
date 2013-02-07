@@ -53,4 +53,4 @@ alias dmcs 'ssh dmc-stage.marklogic.com'
 alias 3s 'ssh stanford-3s.demo.marklogic.com'
 alias try 'ssh try.marklogic.com'
 
-alias cdr 'cd ~/repos/rundmc'
+alias cdr 'cd /space/git/rundmc.git'

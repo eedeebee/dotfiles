@@ -43,13 +43,13 @@ if ( (! $?ENVONLY) && $?prompt ) then
         
 
         if ( -o /bin/su || -o /usr/bin/su ) then
-                if ($shell == /bin/csh) then
+                if (! $?tcsh) then
                     set prompt="(${HOST}) ==# "
                 else
                     set prompt = "%{\033[0;1;${col}m%}(%B${SHORT_HOST}) ==#%{\033[0;1;${black}m%}%b "
                 endif
         else
-                if ($shell == /bin/csh) then
+                if (! $?tcsh) then
                     set prompt="(${HOST}) ==> "
                 else
                     set prompt = "%{\033[0;1;${col}m%}(%B${SHORT_HOST}) ==>%{\033[0;1;${black}m%}%b "
@@ -126,6 +126,7 @@ add2path /usr/local/mysql/bin
 
 alias svd 'svn diff --diff-cmd ~/bin/vd'
 
+alias 'bgit' '/usr/bin/sudo -u git -H tcsh'
 
 ##
 # Your previous /Users/ebloch/.cshrc file was backed up as /Users/ebloch/.cshrc.macports-saved_2010-03-05_at_22:32:39
