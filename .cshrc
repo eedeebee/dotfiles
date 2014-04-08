@@ -117,12 +117,12 @@ setenv PAGER 'less -X'
 
 alias mmload 'nohup python /usr/local/markmail/bin/load.py \!* >>& mmload.out &'
 
-add2path /opt/CollabNet_Subversion/bin/
 add2path /sbin
 add2path /usr/sbin
 add2path /usr/local/markmail/bin
 add2path ~/bin
 add2path /usr/local/mysql/bin
+add2path $HOME/.rvm/bin
 
 alias svd 'svn diff --diff-cmd ~/bin/vd'
 
