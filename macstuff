@@ -4,3 +4,5 @@ sudo defaults write /System/Library/LaunchDaemons/org.apache.httpd Disabled -boo
 mkdir -p ~/Pictures/Screenshots
 defaults write com.apple.screencapture location ~/Pictures/Screenshots
 sudo -s launchctl load -w /System/Library/LaunchDaemons/ftp.plist
+defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" 40
+
