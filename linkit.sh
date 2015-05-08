@@ -11,8 +11,13 @@ if [ ! -e ~/.origdotfiles ] ; then
         ~/.origdotfiles
 fi
 
-ln -f ~/dotfiles/.cshrc ~/.cshrc
-ln -f ~/dotfiles/.vimrc ~/.vimrc
-ln -f ~/dotfiles/.marklogic.cshrc ~/.marklogic.cshrc
+ln -f ~/repos/dotfiles/.cshrc ~/.cshrc
+ln -f ~/repos/dotfiles/.vimrc ~/.vimrc
+if [ -e ~/repos/dotfiles/.marklogic.cshrc ] ; then
+    ln -f ~/repos/dotfiles/.marklogic.cshrc ~/.marklogic.cshrc
+fi
+if [ -e ~/repos/dotfiles/.udemy.cshrc ] ; then
+    ln -f ~/repos/dotfiles/.udemy.cshrc ~/.udemy.cshrc
+fi
 
 mkdir -p ~/.vim-backup-dir

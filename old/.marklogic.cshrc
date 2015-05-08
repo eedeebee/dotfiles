@@ -1,4 +1,8 @@
 
+alias cdx 'cd /usr/local/markmail/xquery'
+alias cda 'cd /usr/local/markmail/xquery/admin'
+alias cdu 'cd /usr/local/markmail/xquery/userui'
+
 #alias ssh ssh -L6001:localhost:6000
 alias mm cd /usr/local/markmail
 alias f 'ssh front0\!:1.dev.markmail.int'

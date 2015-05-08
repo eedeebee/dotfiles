@@ -99,13 +99,8 @@ set autologout=0
 #cd .
 #cwdcmd
 
-#source ~/.jh-tcshrc
-
-alias cdx 'cd /usr/local/markmail/xquery'
-alias cda 'cd /usr/local/markmail/xquery/admin'
-alias cdu 'cd /usr/local/markmail/xquery/userui'
-
 if (-e ~/.marklogic.cshrc) source ~/.marklogic.cshrc
+if (-e ~/.udemy.cshrc) source ~/.udemy.cshrc
 
 if ("$OSTYPE" == "darwin") then
     alias ls 'ls -sFG'
@@ -137,3 +132,7 @@ setenv PATH /opt/local/bin:/opt/local/sbin:$PATH
 # Finished adapting your PATH environment variable for use with MacPorts.
 
 set cdpath = (~ ~/repos)
+
+complete aws 'p/*/`aws_completer`/'
+
+alias uj source ~/envs/udemy-py3-env/bin/activate.csh 
