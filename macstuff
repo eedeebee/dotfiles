@@ -5,3 +5,4 @@ defaults write com.apple.Finder AppleShowAllFiles YES
 #defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" 40
 mkdir -p ~/Screenshots
 defaults write com.apple.screencapture location ~/Screenshots
+# hello
