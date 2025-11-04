@@ -105,6 +105,7 @@ plugins=(git zsh-history-substring-search zsh-vi-mode)
 alias loadenv='set -o allexport; source ${HOME}/repos/2494shr/.env ; set +o allexport'
 alias empty='git commit --allow-empty -m "run:batch-test"'
 alias vz='vim ~/.zshrc'
+alias sz='source ~/.zshrc'
 
 export CDPATH=.:~:~/repos:~/repos/2494shr
 
@@ -129,6 +130,8 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
+# Disable pyenv-virtualenv's automatic prompt modification since we'll create our own
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 eval "$(pyenv virtualenv-init -)"
 
 #pyenv activate my-env-3.12
@@ -153,6 +156,55 @@ if [[ -t 1 ]]; then
     }
 fi
 
+# Custom prompt with pyenv and git info (including worktrees)
+setopt PROMPT_SUBST
+
+# Function to get pyenv version/virtualenv
+pyenv_prompt_info() {
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        echo "($(basename $VIRTUAL_ENV))"
+    elif [[ -n "$PYENV_VERSION" ]]; then
+        echo "($PYENV_VERSION)"
+    fi
+}
+
+# Function to get git branch and worktree info
+git_prompt_info() {
+    # Check if we're in a git repository
+    if git rev-parse --git-dir > /dev/null 2>&1; then
+        local branch=$(git symbolic-ref --short HEAD 2>/dev/null || echo "detached")
+        local worktree_info=""
+        
+        # Check if we're in a worktree (not the main working tree)
+        local git_dir=$(git rev-parse --git-dir 2>/dev/null)
+        if [[ "$git_dir" == *".git/worktrees"* ]]; then
+            # Get the worktree path (relative to home or absolute)
+            local worktree_path=$(git rev-parse --show-toplevel 2>/dev/null)
+            if [[ -n "$worktree_path" ]]; then
+                # Show relative to home if possible, otherwise show basename
+                if [[ "$worktree_path" == "$HOME"/* ]]; then
+                    worktree_info=" [~${worktree_path#$HOME}]"
+                else
+                    worktree_info=" [$(basename "$worktree_path")]"
+                fi
+            fi
+        fi
+        
+        # Get status indicators
+        local git_status=""
+        if ! git diff --quiet 2>/dev/null; then
+            git_status="${git_status} *"
+        fi
+        if ! git diff --cached --quiet 2>/dev/null; then
+            git_status="${git_status} +"
+        fi
+        
+        echo " ($branch$worktree_info$git_status)"
+    fi
+}
+
+# Custom prompt: pyenv + git + directory + prompt
+PROMPT='$(pyenv_prompt_info)$(git_prompt_info) %~ $ '
 
 export SRC_ENDPOINT=https://sourcegraph.com
 export SRC_ACCESS_TOKEN=sgp_fd1b4edb60bf82b8_5cbf77b776ec4e963b51be39bec1e3b966427b89
