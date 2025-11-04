@@ -1,18 +1,13 @@
-if [ -z "$INTELLIJ_ENVIRONMENT_READER" ]; then
-    eval "$(ssh-agent -s)"
-fi
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Setting PATH for Python 2.7
-# The original version is saved in .zprofile.pysave
-PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
-
-#export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/
-PATH="${JAVA_HOME}bin:${PATH}"
-export PATH
-
-
-# Added by me
-export PATH="$(brew --prefix rbenv)/bin:$PATH"
-# Added by `rbenv init` on Mon Jul 15 19:52:33 PDT 2024
+# Added by `rbenv init` on Mon Feb 17 22:03:14 PST 2025
 eval "$(rbenv init - --no-rehash zsh)"
+
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$HOME/bin
+
+export PATH=/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH
+
+export MISTRAL_API_KEY=xZbNIyaXGcC63WdD9daeppGIumcsyzEN

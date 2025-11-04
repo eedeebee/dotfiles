@@ -1,3 +1,0 @@
-
-setenv ANT_HOME ~/apache-ant-1.8.2
-add2path $ANT_HOME/bin

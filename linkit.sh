@@ -1,19 +1,19 @@
 :
 
 if [ ! -e ~/.origdotfiles ] ; then
-    echo 'hello'
+    echo 'Saving original dotfiles...'
     mkdir ~/.origdotfiles
 
-    mv \
-        ~/.cshrc \
+    mv -f \
         ~/.vimrc \
+        ~/.zprofile \
+        ~/.zshrc \
         ~/.origdotfiles
 fi
 
-ln -f ~/repos/dotfiles/.cshrc ~/.cshrc
 ln -f ~/repos/dotfiles/.vimrc ~/.vimrc
 ln -f ~/repos/dotfiles/.zprofile ~/.zprofile
 ln -f ~/repos/dotfiles/.zshrc ~/.zshrc
-ln -f ~/repos/dotfiles/.zshenv ~/.zshenv
+# ln -f ~/repos/dotfiles/.zshenv ~/.zshenv
 
 mkdir -p ~/.vim-backup-dir
