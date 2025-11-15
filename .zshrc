@@ -119,7 +119,7 @@ if [ -f '/Users/ericbloch/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/U
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/ericbloch/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ericbloch/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 
-export ANDROID_HOME=$HOME/Library/Android/sdk && export PATH=$PATH:$ANDROID_HOME/emulator && export PATH=$PATH:$ANDROID_HOME/platform-tools && export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+# export ANDROID_HOME=$HOME/Library/Android/sdk && export PATH=$PATH:$ANDROID_HOME/emulator && export PATH=$PATH:$ANDROID_HOME/platform-tools && export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
 
 . "$HOME/.local/bin/env"
 
@@ -257,3 +257,106 @@ bindkey -M viins '\eN' history-substring-search-down
 #     ssh -i ~/keys/ml-host-key.pem -l ubuntu $(aws ec2 describe-instances --instance-ids $TRAINER_INSTANCE_ID  --query "Reservations[0].Instances[0].PublicDnsName" --output text)
 # }
 
+export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
+
+# export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+# export PATH="$JAVA_HOME/bin:$PATH"
+
+use_expo() {
+    # Convert PATH to array and filter out Java-related paths
+    local new_path=()
+    for dir in ${(s/:/)PATH}; do
+        # Skip Java-related directories but keep system paths
+        if [[ "$dir" != *"openjdk"* && "$dir" != *"/jdk"* && "$dir" != "/opt/homebrew/opt/openjdk"* ]]; then
+            # Also remove any existing JAVA_HOME/bin
+            if [ -n "$JAVA_HOME" ] && [[ "$dir" != "$JAVA_HOME/bin" ]]; then
+                new_path+=("$dir")
+            elif [ -z "$JAVA_HOME" ]; then
+                new_path+=("$dir")
+            fi
+        fi
+    done
+    export PATH=${(j/:/)new_path}
+    
+    export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+    export PATH="$JAVA_HOME/bin:$PATH"
+    export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
+    export PATH="$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/tools:$PATH"
+    nvm use 22
+}
+
+use_rn72() {
+    # Save old JAVA_HOME before unsetting
+    local old_java_home="$JAVA_HOME"
+    unset JAVA_HOME
+    
+    # Explicitly remove ALL Java paths from PATH using a more robust method
+    # Split PATH, filter out Java paths, rejoin
+    local -a path_array
+    path_array=(${(s/:/)PATH})
+    local -a clean_path
+    clean_path=()
+    
+    for dir in "${path_array[@]}"; do
+        # Skip if it contains Homebrew Java paths (openjdk, but keep system /Library/Java paths)
+        if [[ "$dir" == *"openjdk"* ]] || \
+           [[ "$dir" == "/opt/homebrew/opt/openjdk"* ]] || \
+           [[ "$dir" == *"/opt/homebrew/Cellar"*"openjdk"* ]] || \
+           [[ "$dir" == *"/Cellar"*"openjdk"* ]] || \
+           [[ "$dir" == *"/opt/homebrew"*"java"* ]] || \
+           [[ "$dir" == *"/opt/homebrew"*"jdk"* ]]; then
+            continue
+        fi
+        # Also remove any existing JAVA_HOME/bin if it was set
+        if [ -n "$old_java_home" ] && [[ "$dir" == "$old_java_home/bin" ]]; then
+            continue
+        fi
+        clean_path+=("$dir")
+    done
+    
+    export PATH=${(j/:/)clean_path}
+    
+    # Find system Java - prioritize /Library/Java/JavaVirtualMachines (system Java)
+    # Explicitly use Zulu 11 or first non-Homebrew Java found
+    local system_java_home=""
+    if [ -d "/Library/Java/JavaVirtualMachines" ]; then
+        # Find system Java installations, prefer Zulu 11, then any other system Java
+        local zulu11_path="/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home"
+        if [ -d "$zulu11_path" ]; then
+            system_java_home="$zulu11_path"
+        else
+            # Find the first system Java installation (exclude Homebrew)
+            local jvm_dir=$(ls -d /Library/Java/JavaVirtualMachines/*/Contents/Home 2>/dev/null | grep -v "/opt/homebrew" | head -1)
+            if [ -n "$jvm_dir" ] && [ -d "$jvm_dir" ]; then
+                system_java_home="$jvm_dir"
+            fi
+        fi
+    fi
+    
+    # Fallback: use /usr/libexec/java_home but explicitly request Zulu 11
+    if [ -z "$system_java_home" ]; then
+        system_java_home=$(/usr/libexec/java_home -v 11 2>/dev/null)
+        # If that didn't work, try filtering java_home output
+        if [ -z "$system_java_home" ] || [[ "$system_java_home" == *"/opt/homebrew"* ]]; then
+            local java_home_output=$(/usr/libexec/java_home -V 2>&1 | grep -v "/opt/homebrew" | grep -v "openjdk" | grep -v "Homebrew" | head -1)
+            if [ -n "$java_home_output" ]; then
+                local java_version=$(echo "$java_home_output" | awk '{print $1}')
+                if [ -n "$java_version" ]; then
+                    system_java_home=$(/usr/libexec/java_home -v "$java_version" 2>/dev/null)
+                fi
+            fi
+        fi
+    fi
+    
+    # Set JAVA_HOME and add to PATH only if we found a system Java
+    if [ -n "$system_java_home" ] && [ -d "$system_java_home/bin" ]; then
+        export JAVA_HOME="$system_java_home"
+        export PATH="$JAVA_HOME/bin:$PATH"
+    fi
+    
+    export ANDROID_HOME=$HOME/Library/Android/sdk
+    export PATH=$PATH:$ANDROID_HOME/emulator
+    export PATH=$PATH:$ANDROID_HOME/platform-tools
+    export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+    nvm use 18
+}
