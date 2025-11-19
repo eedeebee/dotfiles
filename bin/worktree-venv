@@ -1,0 +1,135 @@
+#!/usr/bin/env zsh
+# worktree-venv - Manage pyenv virtualenvs for git worktrees
+
+PYTHON_VERSION="3.12"  # Default Python version
+
+# Get current branch name as fallback for venv name
+get_branch_name() {
+    git symbolic-ref --short HEAD 2>/dev/null || basename "$(pwd)"
+}
+
+# Get venv name from .python-version file or use branch name
+get_venv_name() {
+    if [ -f .python-version ]; then
+        cat .python-version
+    else
+        get_branch_name
+    fi
+}
+
+case "$1" in
+    new|create)
+        VENV_NAME="${2:-$(get_branch_name)}"
+        PYTHON_VER="${3:-$PYTHON_VERSION}"
+        
+        echo "Creating pyenv virtualenv: $VENV_NAME (Python $PYTHON_VER)"
+        
+        # Check if virtualenv already exists
+        if pyenv virtualenvs | grep -q "$VENV_NAME"; then
+            echo "⚠️  Virtualenv '$VENV_NAME' already exists"
+            read "response?Use existing? [y/N]: "
+            if [[ ! "$response" =~ ^[Yy]$ ]]; then
+                exit 1
+            fi
+        else
+            # Create the virtualenv
+            pyenv virtualenv "$PYTHON_VER" "$VENV_NAME"
+            if [ $? -ne 0 ]; then
+                echo "❌ Failed to create virtualenv"
+                exit 1
+            fi
+        fi
+        
+        # Set local python version
+        pyenv local "$VENV_NAME"
+        echo "✓ Created and activated virtualenv: $VENV_NAME"
+        echo "✓ Set .python-version to: $VENV_NAME"
+        ;;
+        
+    delete|remove|rm)
+        VENV_NAME="${2:-$(get_venv_name)}"
+        
+        if ! pyenv virtualenvs | grep -q "$VENV_NAME"; then
+            echo "❌ Virtualenv '$VENV_NAME' not found"
+            echo "Available virtualenvs:"
+            pyenv virtualenvs --bare
+            exit 1
+        fi
+        
+        echo "Deleting virtualenv: $VENV_NAME"
+        read "response?Are you sure? [y/N]: "
+        if [[ "$response" =~ ^[Yy]$ ]]; then
+            pyenv virtualenv-delete -f "$VENV_NAME"
+            [ -f .python-version ] && rm .python-version
+            echo "✓ Deleted virtualenv: $VENV_NAME"
+        else
+            echo "Cancelled"
+        fi
+        ;;
+        
+    activate|use)
+        VENV_NAME="${2:-$(get_venv_name)}"
+        
+        if ! pyenv virtualenvs | grep -q "$VENV_NAME"; then
+            echo "❌ Virtualenv '$VENV_NAME' not found"
+            echo "Create it with: worktree-venv new $VENV_NAME"
+            exit 1
+        fi
+        
+        pyenv local "$VENV_NAME"
+        echo "✓ Activated virtualenv: $VENV_NAME"
+        ;;
+        
+    list|ls)
+        echo "Available pyenv virtualenvs:"
+        pyenv virtualenvs
+        
+        if [ -f .python-version ]; then
+            echo ""
+            echo "Current worktree using: $(cat .python-version)"
+        fi
+        ;;
+        
+    status|info)
+        echo "Current directory: $(pwd)"
+        echo "Branch: $(get_branch_name)"
+        
+        if [ -f .python-version ]; then
+            echo "Python version file: $(cat .python-version)"
+        else
+            echo "Python version file: (none)"
+        fi
+        
+        if [ -n "$PYENV_VERSION" ]; then
+            echo "Active pyenv: $PYENV_VERSION"
+        else
+            echo "Active pyenv: (none)"
+        fi
+        
+        if [ -n "$VIRTUAL_ENV" ]; then
+            echo "Active virtualenv: $(basename $VIRTUAL_ENV)"
+        else
+            echo "Active virtualenv: (none)"
+        fi
+        ;;
+        
+    *)
+        echo "Usage: worktree-venv <command> [options]"
+        echo ""
+        echo "Commands:"
+        echo "  new [name] [python-version]  - Create a new virtualenv (default: branch name, Python $PYTHON_VERSION)"
+        echo "  delete [name]                - Delete a virtualenv (default: from .python-version)"
+        echo "  activate [name]              - Activate a virtualenv (default: from .python-version)"
+        echo "  list                         - List all pyenv virtualenvs"
+        echo "  status                       - Show current worktree and virtualenv status"
+        echo ""
+        echo "Examples:"
+        echo "  worktree-venv new                    # Creates venv named after current branch"
+        echo "  worktree-venv new my-feature         # Creates venv named 'my-feature'"
+        echo "  worktree-venv new my-feature 3.11    # Creates venv with Python 3.11"
+        echo "  worktree-venv delete                 # Deletes venv from .python-version"
+        echo "  worktree-venv list                   # Lists all virtualenvs"
+        exit 1
+        ;;
+esac
+
