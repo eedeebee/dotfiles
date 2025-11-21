@@ -5,7 +5,9 @@ PYTHON_VERSION="3.12"  # Default Python version
 
 # Get current branch name as fallback for venv name
 get_branch_name() {
-    git symbolic-ref --short HEAD 2>/dev/null || basename "$(pwd)"
+    local branch_name=$(git symbolic-ref --short HEAD 2>/dev/null || basename "$(pwd)")
+    # Sanitize: replace slashes with hyphens (pyenv doesn't allow slashes)
+    echo "$branch_name" | sed 's/\//-/g'
 }
 
 # Get venv name from .python-version file or use branch name
@@ -20,6 +22,8 @@ get_venv_name() {
 case "$1" in
     new|create)
         VENV_NAME="${2:-$(get_branch_name)}"
+        # Sanitize user-provided name too
+        VENV_NAME=$(echo "$VENV_NAME" | sed 's/\//-/g')
         PYTHON_VER="${3:-$PYTHON_VERSION}"
         
         echo "Creating pyenv virtualenv: $VENV_NAME (Python $PYTHON_VER)"
@@ -82,7 +86,7 @@ case "$1" in
         
     list|ls)
         echo "Available pyenv virtualenvs:"
-        pyenv virtualenvs
+        pyenv virtualenvs --bare | grep -v '/' | sed 's/^/  /'
         
         if [ -f .python-version ]; then
             echo ""
