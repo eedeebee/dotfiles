@@ -107,7 +107,29 @@ alias empty='git commit --allow-empty -m "run:batch-test"'
 alias vz='vim ~/.zshrc'
 alias sz='source ~/.zshrc'
 
-export CDPATH=.:~:~/repos:~/repos/2494shr
+# Dynamic CDPATH that adjusts based on git worktree
+update_cdpath() {
+  # Only bother checking git status if we're in a likely location
+  if [[ "$PWD" == "$HOME/repos"* ]]; then
+    local git_root=""
+    
+    if git rev-parse --show-toplevel > /dev/null 2>&1; then
+      git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+      local git_dir=$(git rev-parse --git-dir 2>/dev/null)
+      
+      if [[ "$git_dir" == *".git/worktrees"* ]]; then
+        export CDPATH=.:~:~/repos:$git_root
+        return
+      fi
+    fi
+  fi
+  
+  # Default for everywhere else
+  export CDPATH=.:~:~/repos:~/repos/2494shr
+}
+
+# Initialize CDPATH on shell startup
+update_cdpath
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -152,6 +174,7 @@ auto_activate_venv() {
 if [[ -t 1 ]]; then
     cd() {
       builtin cd "$@" || return
+      update_cdpath
       # auto_activate_venv
     }
 fi
@@ -360,3 +383,6 @@ use_rn72() {
     export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
     nvm use 18
 }
+
+alias kprod='kubectl --context=gke_prototype2-413618_us-central1-c_fai-prod'
+alias k='kubectl'
