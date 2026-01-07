@@ -226,6 +226,14 @@ git_prompt_info() {
     fi
 }
 
+git_main_to_cbc() {
+    git fetch origin &&
+    git checkout eedeebee/cloud-batch-cli &&
+    git reset --hard origin/main &&
+    git push --force-with-lease origin eedeebee/cloud-batch-cli
+}
+
+
 # Custom prompt: pyenv + git + directory + prompt
 PROMPT='$(pyenv_prompt_info)$(git_prompt_info) %~ $ '
 
